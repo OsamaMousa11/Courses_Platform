@@ -1,4 +1,4 @@
-namespace CoursesPlatform.UI.Models
+namespace CoursesPlatform.Models
 {
     public class ErrorViewModel
     {

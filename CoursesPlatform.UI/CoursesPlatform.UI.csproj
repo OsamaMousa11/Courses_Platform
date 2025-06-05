@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CoursePlatform.Application\CoursePlatform.Core.csproj" />
+    <ProjectReference Include="..\CoursePlatform.Infrastructure\CoursePlatform.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
