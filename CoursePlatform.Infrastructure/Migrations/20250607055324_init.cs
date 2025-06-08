@@ -17,11 +17,12 @@ namespace CoursePlatform.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DisplayOrder = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.CheckConstraint("CK_DisplayOrder_Range", "[DisplayOrder] >= 1 AND [DisplayOrder] <= 50");
                 });
 
             migrationBuilder.CreateTable(
@@ -46,6 +47,7 @@ namespace CoursePlatform.Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     ImageUrl = table.Column<string>(type: "VARCHAR(100)", nullable: false),
+                    Rating = table.Column<double>(type: "float", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "date", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -82,13 +84,21 @@ namespace CoursePlatform.Infrastructure.Migrations
                         name: "FK_Favourites_Courses_Course_Id",
                         column: x => x.Course_Id,
                         principalTable: "Courses",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Favourites_Users_User_Id",
                         column: x => x.User_Id,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_DisplayOrder",
+                table: "Categories",
+                column: "DisplayOrder",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_CategoryId",

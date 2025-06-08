@@ -1,12 +1,4 @@
-﻿using CoursePlatform.Core.Domain.Entites;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace CoursePlatform.Infrastructure.Configration
 {
     public class CoursesConfiguration : IEntityTypeConfiguration<Course>
@@ -21,6 +13,8 @@ namespace CoursePlatform.Infrastructure.Configration
             builder.Property(x => x.Price).IsRequired().HasColumnType("decimal(10,2)");
 
             builder.Property(x => x.ImageUrl).HasColumnType("VARCHAR(100)").IsRequired();
+
+            builder.Property(x => x.Rating).IsRequired();
 
             builder.Property(x => x.CreatedAt).HasColumnType("date").IsRequired();
 
@@ -37,6 +31,6 @@ namespace CoursePlatform.Infrastructure.Configration
 
 
 
-        }
+        }   
     }
 }

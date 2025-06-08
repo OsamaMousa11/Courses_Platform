@@ -1,18 +1,33 @@
+using CoursePlatform.Core.Domain.RepositoryContract;
+using CoursePlatform.Core.Service;
+using CoursePlatform.Core.ServiceContract;
 using CoursePlatform.Infrastructure.Data;
+using CoursePlatform.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+var connectionString = builder.Configuration.GetConnectionString("connstr")
+                       ?? throw new InvalidOperationException("No connection string found.");
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(connectionString));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddScoped<ICategoryService,CategoryService>();
+builder.Services.AddScoped<ICategoryRepository,CategoryRepositoy>();
+
 var app = builder.Build();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                       ?? throw new InvalidOperationException("No connection string found.");
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString));
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var seeder = new Seed_Category(context);
+    seeder.Seed();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

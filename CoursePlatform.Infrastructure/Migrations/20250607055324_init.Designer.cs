@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoursePlatform.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250605045033_init")]
+    [Migration("20250607055324_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -35,11 +35,18 @@ namespace CoursePlatform.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.HasIndex("DisplayOrder")
+                        .IsUnique();
+
+                    b.ToTable("Categories", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_DisplayOrder_Range", "[DisplayOrder] >= 1 AND [DisplayOrder] <= 50");
+                        });
                 });
 
             modelBuilder.Entity("CoursePlatform.Core.Domain.Entites.Course", b =>
@@ -69,6 +76,9 @@ namespace CoursePlatform.Infrastructure.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10,2)");
+
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -145,11 +155,13 @@ namespace CoursePlatform.Infrastructure.Migrations
                     b.HasOne("CoursePlatform.Core.Domain.Entites.Course", "Courses")
                         .WithMany("Favorites")
                         .HasForeignKey("Course_Id")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CoursePlatform.Core.Domain.Entites.User", "Users")
                         .WithMany("Favorites")
                         .HasForeignKey("User_Id")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Courses");

@@ -1,0 +1,1 @@
+﻿global using CoursePlatform.Core.Domain.Entites;

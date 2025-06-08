@@ -1,0 +1,62 @@
+﻿@model List<CoursePlatform.Core.DTO.CategoryResponse>
+@{
+    string currentSort = ViewBag.CurrentSort as string ?? "";
+}
+
+<div class="container">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Category List</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Category" asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New Category
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <form asp-controller="Category" asp-action="Index" method="get">
+                <div class="input-group">
+                    <input type="text" name="searchString" class="form-control" placeholder="Search categories..." value="@ViewBag.CurrentFilter" />
+                    <input type="hidden" name="sortOrder" value="@currentSort" />
+                    <button type="submit" class="btn btn-outline-secondary">
+                        <i class="bi bi-search"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Display Order
+                    <a asp-action="Index" asp-route-sortOrder="displayOrder_asc"><i class="bi bi-arrow-up"></i></a>
+                    <a asp-action="Index" asp-route-sortOrder="displayOrder_desc"><i class="bi bi-arrow-down"></i></a>
+                </th>
+                <th>Category Name</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Model)
+            {
+                <tr>
+                    <td>@category.DisplayOrder</td>
+                    <td>@category.Name</td>
+                    <td>
+                        <a asp-controller="Category" asp-action="Edit" asp-route-id="@category.Id" class="btn btn-dark me-2">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+                        <a asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
