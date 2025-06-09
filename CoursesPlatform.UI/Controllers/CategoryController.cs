@@ -67,7 +67,6 @@ namespace CoursesPlatform.UI.Controllers
 
         [HttpGet]
         [Route("[action]/{Id}")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _categoryService.DeleteCategory(id);
