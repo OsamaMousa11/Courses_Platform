@@ -1,6 +1,10 @@
-﻿@model List<CoursePlatform.Core.DTO.CategoryResponse>
+﻿@using CoursePlatform.Core.Enum
+@model List<CoursePlatform.Core.DTO.CategoryResponse>
 @{
-    string currentSort = ViewBag.CurrentSort as string ?? "";
+    string currentSort = ViewBag.CurrentSort as string ?? nameof(CategoryResponse.Name);
+    SortedOption currentSortOrder = ViewBag.SortOrder ?? SortedOption.Asc;
+    string currentSearchBy = ViewBag.SearchBy as string ?? nameof(CategoryResponse.Name);
+    string currentSearchString = ViewBag.SearchString as string;
 }
 
 <div class="container">
@@ -19,8 +23,13 @@
         <div class="col-md-6">
             <form asp-controller="Category" asp-action="Index" method="get">
                 <div class="input-group">
-                    <input type="text" name="searchString" class="form-control" placeholder="Search categories..." value="@ViewBag.CurrentFilter" />
-                    <input type="hidden" name="sortOrder" value="@currentSort" />
+                    <select name="searchBy" class="form-select">
+                        <option value="@nameof(CategoryResponse.Name)" selected="@(currentSearchBy == nameof(CategoryResponse.Name))">Name</option>
+                        <option value="@nameof(CategoryResponse.DisplayOrder)" selected="@(currentSearchBy == nameof(CategoryResponse.DisplayOrder))">Display Order</option>
+                    </select>
+                    <input type="text" name="searchString" class="form-control" placeholder="Search categories..." value="@currentSearchString" />
+                    <input type="hidden" name="sortBy" value="@currentSort" />
+                    <input type="hidden" name="sortOrder" value="@currentSortOrder" />
                     <button type="submit" class="btn btn-outline-secondary">
                         <i class="bi bi-search"></i> Search
                     </button>
@@ -34,11 +43,39 @@
             <tr>
                 <th>
                     Display Order
-                    <a asp-action="Index" asp-route-sortOrder="displayOrder_asc"><i class="bi bi-arrow-up"></i></a>
-                    <a asp-action="Index" asp-route-sortOrder="displayOrder_desc"><i class="bi bi-arrow-down"></i></a>
+                    <a asp-action="Index"
+                       asp-route-sortBy="@nameof(CategoryResponse.DisplayOrder)"
+                       asp-route-sortOrder="@SortedOption.Asc"
+                       asp-route-searchBy="@(string.IsNullOrEmpty(currentSearchString) ? null : currentSearchBy)"
+                       asp-route-searchString="@currentSearchString">
+                        <i class="bi bi-arrow-up"></i>
+                    </a>
+                    <a asp-action="Index"
+                       asp-route-sortBy="@nameof(CategoryResponse.DisplayOrder)"
+                       asp-route-sortOrder="@SortedOption.Desc"
+                       asp-route-searchBy="@(string.IsNullOrEmpty(currentSearchString) ? null : currentSearchBy)"
+                       asp-route-searchString="@currentSearchString">
+                        <i class="bi bi-arrow-down"></i>
+                    </a>
                 </th>
-                <th>Category Name</th>
-                
+                <th>
+                    Category Name
+                    <a asp-action="Index"
+                       asp-route-sortBy="@nameof(CategoryResponse.Name)"
+                       asp-route-sortOrder="@SortedOption.Asc"
+                       asp-route-searchBy="@(string.IsNullOrEmpty(currentSearchString) ? null : currentSearchBy)"
+                       asp-route-searchString="@currentSearchString">
+                        <i class="bi bi-arrow-up"></i>
+                    </a>
+                    <a asp-action="Index"
+                       asp-route-sortBy="@nameof(CategoryResponse.Name)"
+                       asp-route-sortOrder="@SortedOption.Desc"
+                       asp-route-searchBy="@(string.IsNullOrEmpty(currentSearchString) ? null : currentSearchBy)"
+                       asp-route-searchString="@currentSearchString">
+                        <i class="bi bi-arrow-down"></i>
+                    </a>
+                </th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>

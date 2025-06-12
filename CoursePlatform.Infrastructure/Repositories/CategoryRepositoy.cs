@@ -1,4 +1,6 @@
-﻿namespace CoursePlatform.Infrastructure.Repositories
+﻿using System.Linq.Expressions;
+
+namespace CoursePlatform.Infrastructure.Repositories
 {
     public class CategoryRepositoy : ICategoryRepository
     {
@@ -11,20 +13,13 @@
 
         public async Task<int> GetNextDisplayOrder()
         {
-            if (!await _context.Categories.AnyAsync())
-            {
-                Console.WriteLine("No categories found, returning 1");
-                return 1;
-            }
+
             return await _context.Categories.MaxAsync(c => c.DisplayOrder) + 1;
         }
 
         public async Task Add(Category category)
-        {
-            if (await _context.Categories.AnyAsync(c => c.Name.ToLower() == category.Name.ToLower()))
-            {
-                throw new InvalidOperationException("this Category Already Exits");
-            }
+        {   
+           
             await _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
         }
@@ -43,10 +38,7 @@
         public async Task<Category> UpdateCategory(Category category)
         {
             Category? mathingPerson = await _context.Categories.FirstOrDefaultAsync(c => c.Id == category.Id);
-            if (mathingPerson == null)
-            {
-                return category;
-            }
+       
             mathingPerson.Name = category.Name;
             mathingPerson.DisplayOrder = category.DisplayOrder;
             mathingPerson.Id = category.Id;
@@ -60,5 +52,12 @@
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<Category>> GetFilteredCategory(Expression<Func<Category, bool>> predicate)
+        {
+           return await _context.Categories.Where(predicate).ToListAsync();
+        }
+
+     
     }
 }

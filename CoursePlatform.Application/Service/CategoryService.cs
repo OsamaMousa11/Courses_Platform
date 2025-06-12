@@ -1,90 +1,129 @@
-﻿namespace CoursePlatform.Core.Service
+﻿using CoursePlatform.Core.DTO;
+using CoursePlatform.Core.Enum;
+using CoursePlatform.Core.Helper;
+using System;
+
+namespace CoursePlatform.Core.Service
 {
     public class CategoryService : ICategoryService
-    {  
-        private readonly ICategoryRepository _db;
+    {
+        private readonly ICategoryRepository _CategoryRepository;
         public CategoryService(ICategoryRepository db)
         {
-            _db = db;
+            _CategoryRepository = db;
         }
 
-        public async Task<CategoryResponse>AddCategory(CategoryAddRequest categoryRequest)
+        public async Task<CategoryResponse> AddCategory(CategoryAddRequest categoryRequest)
         {
             if (categoryRequest == null)
             {
                 throw new ArgumentNullException(nameof(categoryRequest));
             }
+            ValidationHelper.ModelValidation(categoryRequest);
+
+            var existingCategory = (await _CategoryRepository.GetAllCategories())
+             .FirstOrDefault(c => c.Name.Equals(categoryRequest.Name, StringComparison.OrdinalIgnoreCase));
+
 
             var category = categoryRequest.ToCategory();
-            category.DisplayOrder =await _db.GetNextDisplayOrder();
-            category.Id= Guid.NewGuid();
+            category.DisplayOrder = await _CategoryRepository.GetNextDisplayOrder();
+            category.Id = Guid.NewGuid();
 
-            await _db.Add(category);  
-            return  category.ToCategoryResponse();
+
+            await _CategoryRepository.Add(category);
+            return category.ToCategoryResponse();
         }
 
-        public  async Task<bool> DeleteCategory(Guid id)
+        public async Task<bool> DeleteCategory(Guid id)
         {
-            var category = await _db.GetCategoryById(id);
+            var category = await _CategoryRepository.GetCategoryById(id);
             if (category == null)
                 return false;
 
-            await _db.DeleteCategory(category);
+            await _CategoryRepository.DeleteCategory(category);
             return true;
         }
 
         public async Task<List<Category>> GetAllCategories()
         {
-            return await _db.GetAllCategories();
+            return await _CategoryRepository.GetAllCategories();
         }
 
 
 
-        public  async Task<CategoryResponse> GetCategoryById(Guid? id)
+        public async Task<CategoryResponse> GetCategoryById(Guid? id)
         {
             if (id == null) return null;
-            Category? category = await _db.GetCategoryById(id.Value);
+            Category? category = await _CategoryRepository.GetCategoryById(id.Value);
             if (category == null) return null;
 
             return category.ToCategoryResponse();
         }
 
-        public async Task<List<CategoryResponse>> GetFilteredSortedCategories(string? search, string? sortOrder)
+        public async Task<List<CategoryResponse>> GetFilteredCategory(string searchBy, string? searchString)
         {
-            var categories = await _db.GetAllCategories();
-
-            if (!string.IsNullOrWhiteSpace(search))
+            
+            List<Category> category = searchBy switch
             {
-                categories = categories
-                    .Where(c => c.Name.ToLower().Contains(search.ToLower()))
-                    .ToList();
-            }
+                nameof(CategoryResponse.Name) =>
+                 await _CategoryRepository.GetFilteredCategory(
+                 temp =>
+                 temp.Name.Contains(searchString)),
 
-            categories = sortOrder switch
-            {
-                "name_asc" => categories.OrderBy(c => c.Name).ToList(),
-                "name_desc" => categories.OrderByDescending(c => c.Name).ToList(),
-                "displayOrder_asc" => categories.OrderBy(c => c.DisplayOrder).ToList(),
-                "displayOrder_desc" => categories.OrderByDescending(c => c.DisplayOrder).ToList(),
-                _ => categories.OrderBy(c => c.DisplayOrder).ToList(),
+                nameof(CategoryResponse.DisplayOrder) =>
+               await _CategoryRepository.GetFilteredCategory(
+               temp =>
+               temp.DisplayOrder.ToString().Contains(searchString)),
+
+                _ => await _CategoryRepository.GetAllCategories()
             };
-
-            return categories.Select(c => c.ToCategoryResponse()).ToList(); 
+            
+            return category.Select(temp => temp.ToCategoryResponse()).ToList();
         }
 
-        public async Task<CategoryResponse> UpdateCategory(CategoryUpdateRequest? request)
+     
+        public async Task<List<CategoryResponse>> GetSortedCategory(List<CategoryResponse> allCategory, string sortBy, SortedOption sortOrder)
         {
-            if(request==null)
+            
+
+            if (string.IsNullOrEmpty(sortBy))
+                return allCategory;
+
+            List<CategoryResponse> sortedPersons = (sortBy, sortOrder) switch
             {
-                throw new ArgumentNullException(nameof(request));
+                (nameof(CategoryResponse.Name), SortedOption.Asc) =>
+                    allCategory.OrderBy(temp => temp.Name, StringComparer.OrdinalIgnoreCase).ToList(),
+
+                (nameof(CategoryResponse.Name), SortedOption.Desc) =>
+                    allCategory.OrderByDescending(temp => temp.Name, StringComparer.OrdinalIgnoreCase).ToList(),
+
+                (nameof(CategoryResponse.DisplayOrder), SortedOption.Asc) =>
+                    allCategory.OrderBy(temp => temp.DisplayOrder).ToList(),
+
+                (nameof(CategoryResponse.DisplayOrder), SortedOption.Desc) =>
+                    allCategory.OrderByDescending(temp => temp.DisplayOrder).ToList(),
+
+                _ => allCategory
+            };
+            return sortedPersons;
+;
+        }
+
+        public async Task<CategoryResponse> UpdateCategory(CategoryUpdateRequest? categoryUpdateRequest)
+        {
+            if(categoryUpdateRequest==null)
+            {
+                throw new ArgumentNullException(nameof(categoryUpdateRequest));
             }
-            Category? matchingCategory = await _db.GetCategoryById(request.Id);
+            ValidationHelper.ModelValidation(categoryUpdateRequest);
+             
+            Category? matchingCategory = await _CategoryRepository.GetCategoryById(categoryUpdateRequest.Id);
             if(matchingCategory==null)
                 throw new ArgumentNullException(nameof(matchingCategory));
-            matchingCategory.Id = request.Id;
-            matchingCategory.Name = request.Name;
+            matchingCategory.Id = categoryUpdateRequest.Id;
+            matchingCategory.Name = categoryUpdateRequest.Name;
             
-            await _db.UpdateCategory(matchingCategory);
+            await _CategoryRepository.UpdateCategory(matchingCategory);
              
             return matchingCategory.ToCategoryResponse();
         }

@@ -11,7 +11,7 @@ namespace CoursePlatform.Core.DTO
         {
               return new Category
             {
-                
+                Id = Id,
                 Name = Name
             };
         }

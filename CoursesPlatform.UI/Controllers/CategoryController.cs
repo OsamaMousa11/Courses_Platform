@@ -1,4 +1,6 @@
 ﻿
+using CoursePlatform.Core.Enum;
+
 namespace CoursesPlatform.UI.Controllers
 {
     [Route("[controller]")]
@@ -11,13 +13,18 @@ namespace CoursesPlatform.UI.Controllers
             _categoryService = categoryService;
         }
         [Route("[action]")]
-        public async Task<IActionResult> Index(string searchString, string sortOrder)
+        public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(CategoryResponse.Name),SortedOption sortOrder = SortedOption.Asc)
         {
+            ViewBag.SortBy = sortBy;
+            ViewBag.SortOrder = sortOrder;
+            ViewBag.SearchBy = searchBy;
+            ViewBag.SearchString = searchString;
 
-            var categories = await _categoryService.GetFilteredSortedCategories(searchString, sortOrder);
-            ViewBag.CurrentFilter = searchString;
-            ViewBag.CurrentSort = sortOrder;
-            return View(categories);
+            var categories=await _categoryService.GetFilteredCategory(searchBy, searchString);
+            var sortedCategories = await _categoryService.GetSortedCategory(categories, sortBy, sortOrder);
+
+            return View(sortedCategories);
+
         }
         [Route("[action]")]
         public IActionResult Create()
@@ -49,7 +56,7 @@ namespace CoursesPlatform.UI.Controllers
         }
         [HttpPost]
         [Route("[action]/{Id}")]
-        [ValidateAntiForgeryToken]
+      
         public async Task<IActionResult> Edit(CategoryUpdateRequest request)
         {    
             CategoryResponse categoryResponse=await _categoryService.GetCategoryById(request.Id);
@@ -57,7 +64,7 @@ namespace CoursesPlatform.UI.Controllers
             {
                 return RedirectToAction("Index");
             }
-            var _id= request.Id;
+           
             CategoryResponse Updatecategory=await  _categoryService.UpdateCategory(request);
 
            return RedirectToAction("Index");
