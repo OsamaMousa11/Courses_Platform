@@ -1,9 +1,8 @@
 ﻿
-using CoursePlatform.Core.Enum;
-
 namespace CoursesPlatform.UI.Controllers
 {
     [Route("[controller]")]
+   
     public class CategoryController : Controller
     {
 
@@ -13,8 +12,9 @@ namespace CoursesPlatform.UI.Controllers
             _categoryService = categoryService;
         }
         [Route("[action]")]
+        
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(CategoryResponse.Name),SortedOption sortOrder = SortedOption.Asc)
-        {
+        {   
             ViewBag.SortBy = sortBy;
             ViewBag.SortOrder = sortOrder;
             ViewBag.SearchBy = searchBy;
@@ -41,6 +41,7 @@ namespace CoursesPlatform.UI.Controllers
 
         }
         [Route("[action]/{Id}")]
+      
         public async Task<IActionResult> Edit(Guid id)
         {
             CategoryResponse? Response = await _categoryService.GetCategoryById(id);
@@ -49,14 +50,11 @@ namespace CoursesPlatform.UI.Controllers
                 return RedirectToAction("Index");
             }
            CategoryUpdateRequest CategoryUpdateRequest = Response.TocategoryUpdateRequest();
-
             return View(CategoryUpdateRequest);
 
-           
         }
         [HttpPost]
         [Route("[action]/{Id}")]
-      
         public async Task<IActionResult> Edit(CategoryUpdateRequest request)
         {    
             CategoryResponse categoryResponse=await _categoryService.GetCategoryById(request.Id);
@@ -80,13 +78,8 @@ namespace CoursesPlatform.UI.Controllers
             if (!result)
                 return NotFound();
 
-            
             return RedirectToAction("Index");
         }
-
-
-
-
 
     }
 }

@@ -2,11 +2,11 @@
 
 namespace CoursePlatform.Infrastructure.Repositories
 {
-    public class CategoryRepositoy : ICategoryRepository
+    public class CategoryRepository : ICategoryRepository
     {
         private readonly AppDbContext _context;
 
-        public CategoryRepositoy(AppDbContext context)
+        public CategoryRepository(AppDbContext context)
         {
             _context = context;
         }
@@ -18,8 +18,7 @@ namespace CoursePlatform.Infrastructure.Repositories
         }
 
         public async Task Add(Category category)
-        {   
-           
+        {      
             await _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
         }

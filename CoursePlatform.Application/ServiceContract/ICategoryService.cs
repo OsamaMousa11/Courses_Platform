@@ -1,6 +1,4 @@
-﻿using CoursePlatform.Core.DTO;
-using CoursePlatform.Core.Enum;
-
+﻿
 namespace CoursePlatform.Core.ServiceContract
 {
     public interface ICategoryService

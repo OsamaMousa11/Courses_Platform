@@ -1,27 +1,24 @@
-using CoursePlatform.Core.Domain.RepositoryContract;
-using CoursePlatform.Core.Service;
-using CoursePlatform.Core.ServiceContract;
+
 using CoursePlatform.Infrastructure.Data;
-using CoursePlatform.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
+using CoursesPlatform.UI.StartupExtensions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.FileSystemGlobbing.Internal.Patterns;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Services Registration
+builder.Services.ServiceConfiguration(builder.Configuration);
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+});
 
-var connectionString = builder.Configuration.GetConnectionString("connstr")
-                       ?? throw new InvalidOperationException("No connection string found.");
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString));
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
-builder.Services.AddScoped<ICategoryService,CategoryService>();
-builder.Services.AddScoped<ICategoryRepository,CategoryRepositoy>();
 
 var app = builder.Build();
 
+// Database Seed
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -29,25 +26,32 @@ using (var scope = app.Services.CreateScope())
     seeder.Seed();
 }
 
-// Configure the HTTP request pipeline.
+// Middlewares
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+//app.UseHsts();                // 0
+app.UseHttpsRedirection();       // 1
+app.UseStaticFiles();            // 2
+app.UseRouting();                // 3
+app.UseAuthentication();         // 4
+app.UseAuthorization();          // 5
 
-app.UseHttpsRedirection();
-app.UseRouting();
 
-app.UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "areas",
+        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+        );
 
-app.MapStaticAssets();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    endpoints.MapControllerRoute(
+         name: "default",
+         pattern: "{controller=Home}/{action=Index}/{id?}"
+     );
+});
 
 
 app.Run();

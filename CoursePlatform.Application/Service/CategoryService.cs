@@ -119,7 +119,7 @@ namespace CoursePlatform.Core.Service
              
             Category? matchingCategory = await _CategoryRepository.GetCategoryById(categoryUpdateRequest.Id);
             if(matchingCategory==null)
-                throw new ArgumentNullException(nameof(matchingCategory));
+                throw   new ArgumentNullException(nameof(matchingCategory));
             matchingCategory.Id = categoryUpdateRequest.Id;
             matchingCategory.Name = categoryUpdateRequest.Name;
             

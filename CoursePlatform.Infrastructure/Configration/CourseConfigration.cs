@@ -8,9 +8,7 @@ namespace CoursePlatform.Infrastructure.Configration
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedNever();
 
-            builder.Property(x => x.Name).IsRequired().HasMaxLength(250);
-
-            builder.Property(x => x.Price).IsRequired().HasColumnType("decimal(10,2)");
+            builder.Property(x => x.Title).IsRequired().HasMaxLength(250);
 
             builder.Property(x => x.ImageUrl).HasColumnType("VARCHAR(100)").IsRequired();
 

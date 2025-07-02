@@ -1,0 +1,102 @@
+﻿@model CoursesPlatform.DTO.LoginDto
+@{
+    ViewData["Title"] = "Login";
+   
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h3><i class="bi bi-box-arrow-in-right me-2"></i>Account Login</h3>
+                </div>
+                <div class="card-body p-4">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <ul class="mb-0 ps-3">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <form asp-controller="Account" asp-action="Login" method="post">
+                   
+
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label">UserName</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input asp-for="UserName" class="form-control" placeholder="Enter your Name">
+                            </div>
+                            <span asp-validation-for="UserName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" id="passwordInput">
+                                <button class="btn btn-outline-secondary toggle-password" type="button">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input asp-for="RememberMe" class="form-check-input">
+                            <label asp-for="RememberMe" class="form-check-label">Remember me</label>
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                            </button>
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <a asp-controller="Account" asp-action="ForgotPassword" class="text-decoration-none">Forgot password?</a>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    Don't have an account?
+                    <a asp-controller="Account" asp-action="Register" class="fw-bold text-decoration-none">Sign up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Toggle password visibility
+        document.querySelector('.toggle-password').addEventListener('click', function () {
+            const passwordInput = document.getElementById('passwordInput');
+            const icon = this.querySelector('i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.replace('bi-eye', 'bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.replace('bi-eye-slash', 'bi-eye');
+            }
+        });
+
+        // Auto-dismiss alert after 5 seconds
+        setTimeout(() => {
+            const alert = document.querySelector('.alert');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }, 5000);
+    </script>
+}

@@ -10,7 +10,6 @@ namespace CoursePlatform.Core.Domain.RepositoryContract
         Task Add(Category category);
         Task<int> GetNextDisplayOrder();
         Task<Category?> GetCategoryById(Guid id);
-
         Task<List<Category>> GetFilteredCategory (Expression<Func<Category, bool>> predicate);
         Task<Category> UpdateCategory(Category category);
         Task DeleteCategory(Category category);
