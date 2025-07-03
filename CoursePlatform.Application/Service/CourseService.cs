@@ -1,4 +1,6 @@
 ﻿
+using System.Diagnostics.Metrics;
+
 namespace CoursePlatform.Core.Service
 {
     public class CourseService : ICourseService
@@ -52,6 +54,15 @@ namespace CoursePlatform.Core.Service
 
             return  courses.Select(x=>x.ToCourseResponse()).ToList();
            
+        }
+
+        public async Task<CourseResponse> GetCourseById(Guid id)
+        {
+            if (id == null) return null;
+            var course = await _courseRepository.GetById(id);
+            if (course == null) return null;
+
+            return course.ToCourseResponse();
         }
 
         public  async Task<List<CourseResponse>> GetFilteredCourses(string searchBy, string searchString)

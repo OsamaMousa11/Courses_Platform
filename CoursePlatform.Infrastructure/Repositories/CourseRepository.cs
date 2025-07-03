@@ -23,6 +23,14 @@ namespace CoursePlatform.Infrastructure.Repositories
                 .AsNoTracking().ToListAsync();
         }
 
+        public async  Task<Course> GetById(Guid id)
+        {
+           return await _context.Courses
+                .Include(c => c.Category)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
         public async  Task<List<Course>> GetFilteredCourses(Expression<Func<Course, bool>> predict)
         {
             return await _context.Courses

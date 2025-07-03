@@ -7,5 +7,6 @@ namespace CoursePlatform.Core.Domain.RepositoryContract
         Task<List<Course>> GetFilteredCourses(Expression<Func<Course, bool>> predict);
 
         Task Add(Course course);
+        Task<Course> GetById(Guid id);
     }
 }

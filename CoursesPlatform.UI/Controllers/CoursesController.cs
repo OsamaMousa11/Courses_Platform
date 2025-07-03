@@ -1,4 +1,7 @@
-﻿namespace CoursesPlatform.UI.Controllers
+﻿using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
+
+namespace CoursesPlatform.UI.Controllers
 {
     [Route("[controller]/[action]")]
     public class CoursesController : Controller
@@ -42,5 +45,17 @@
                 await _courseService.AddCourse(courseAddRequest);
                 return RedirectToAction("Index");            
          }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(Guid id)
+        {  
+            var course = await _courseService.GetCourseById(id);
+
+            return View(course);
+        }
+
+
+        
+
     }
 }

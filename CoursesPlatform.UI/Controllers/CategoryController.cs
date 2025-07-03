@@ -68,7 +68,6 @@ namespace CoursesPlatform.UI.Controllers
            return RedirectToAction("Index");
 
         }
-     
 
         [HttpGet]
         [Route("[action]/{Id}")]
@@ -80,6 +79,9 @@ namespace CoursesPlatform.UI.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+
 
     }
 }

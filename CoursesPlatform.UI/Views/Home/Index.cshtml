@@ -1,9 +1,8 @@
 ﻿@model List<CourseResponse>
+
 @{
     ViewData["Title"] = "All Courses";
 }
-
-
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -54,38 +53,14 @@
                     @(ViewBag.currentSortBy ?? "Sort Options")
                 </button>
                 <ul class="dropdown-menu w-100" aria-labelledby="sortDropdown">
-                    <li>
-                        <a class="dropdown-item" href="#" data-sort="Title" data-order="ASC">
-                            <i class="bi bi-sort-alpha-down"></i> Title (A-Z)
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#" data-sort="Title" data-order="DESC">
-                            <i class="bi bi-sort-alpha-down-alt"></i> Title (Z-A)
-                        </a>
-                    </li>
+                    <li><a class="dropdown-item" href="#" data-sort="Title" data-order="ASC"><i class="bi bi-sort-alpha-down"></i> Title (A-Z)</a></li>
+                    <li><a class="dropdown-item" href="#" data-sort="Title" data-order="DESC"><i class="bi bi-sort-alpha-down-alt"></i> Title (Z-A)</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li>
-                        <a class="dropdown-item" href="#" data-sort="Rating" data-order="DESC">
-                            <i class="bi bi-star-fill"></i> Highest Rated
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#" data-sort="Rating" data-order="ASC">
-                            <i class="bi bi-star"></i> Lowest Rated
-                        </a>
-                    </li>
+                    <li><a class="dropdown-item" href="#" data-sort="Rating" data-order="DESC"><i class="bi bi-star-fill"></i> Highest Rated</a></li>
+                    <li><a class="dropdown-item" href="#" data-sort="Rating" data-order="ASC"><i class="bi bi-star"></i> Lowest Rated</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li>
-                        <a class="dropdown-item" href="#" data-sort="CreatedAt" data-order="DESC">
-                            <i class="bi bi-calendar-date"></i> Newest
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#" data-sort="CreatedAt" data-order="ASC">
-                            <i class="bi bi-calendar"></i> Oldest
-                        </a>
-                    </li>
+                    <li><a class="dropdown-item" href="#" data-sort="CreatedAt" data-order="DESC"><i class="bi bi-calendar-date"></i> Newest</a></li>
+                    <li><a class="dropdown-item" href="#" data-sort="CreatedAt" data-order="ASC"><i class="bi bi-calendar"></i> Oldest</a></li>
                 </ul>
                 <input type="hidden" id="sortBy" name="sortBy" value="@ViewBag.currentSortBy">
                 <input type="hidden" id="sortOrder" name="sortOrder" value="@ViewBag.currentSortOrder">
@@ -152,7 +127,7 @@
                                     <i class="bi bi-clock-history"></i> @course.ProducedSince.Value years
                                 </small>
                             }
-                            <a asp-action="Details" asp-route-id="@course.CourseId" class="btn btn-sm btn-outline-primary">
+                            <a asp-controller="Courses" asp-action="Details" asp-route-id="@course.CourseId" class="btn btn-sm btn-outline-primary">
                                 View Details
                             </a>
                         </div>
@@ -168,7 +143,7 @@
                                 <span>Rating: @course.Rating?.ToString("0.0")/5.0</span>
                             }
                         </p>
-                        <a asp-action="Details" asp-route-id="@course.CourseId" class="btn btn-outline-light mt-2">
+                        <a asp-controller="Courses" asp-action="Details" asp-route-id="@course.CourseId" class="btn btn-outline-light mt-2">
                             Explore Course
                         </a>
                     </div>
@@ -187,20 +162,16 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function() {
-            // Search functionality
-            $('#searchInput').on('input', function() {
-                const searchTerm = $(this).val().toLowerCase();
+        $(document).ready(function () {
+            $('#searchInput').on('input', function () {
                 filterCourses();
             });
 
-            // Category filter
-            $('#categoryFilter').change(function() {
+            $('#categoryFilter').change(function () {
                 filterCourses();
             });
 
-            // Sorting dropdown
-            $('.dropdown-item[data-sort]').click(function(e) {
+            $('.dropdown-item[data-sort]').click(function (e) {
                 e.preventDefault();
                 const sortBy = $(this).data('sort');
                 const sortOrder = $(this).data('order');
@@ -209,7 +180,6 @@
                 $('#sortOrder').val(sortOrder);
                 $('#sortDropdown').html($(this).html());
 
-                // Submit the form or reload with new parameters
                 window.location.href = `?searchString=${encodeURIComponent($('#searchInput').val())}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
             });
 
@@ -217,18 +187,18 @@
                 const searchTerm = $('#searchInput').val().toLowerCase();
                 const category = $('#categoryFilter').val();
 
-                $('.course-card').each(function() {
+                $('.course-card').each(function () {
                     const card = $(this);
                     const title = card.find('.card-title').text().toLowerCase();
                     const description = card.find('.card-text').text().toLowerCase();
                     const cardCategory = card.find('.badge').text();
 
                     const matchesSearch = searchTerm === '' ||
-                                        title.includes(searchTerm) ||
-                                        description.includes(searchTerm);
+                        title.includes(searchTerm) ||
+                        description.includes(searchTerm);
 
                     const matchesCategory = category === '' ||
-                                          cardCategory === category;
+                        cardCategory === category;
 
                     if (matchesSearch && matchesCategory) {
                         card.closest('.col-lg-4').show();

@@ -9,6 +9,8 @@ namespace CoursePlatform.Core.ServiceContract
         Task<List<CourseResponse>> SortCourses(List<CourseResponse> Course, string sortBy, SortedOption sortedOption);
         Task<CourseResponse> AddCourse(CourseAddRequest courseRequest);
 
+        Task<CourseResponse> GetCourseById(Guid id);
+
 
     }
 }
