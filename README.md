@@ -32,10 +32,11 @@ CoursesPatform is a web application built with ASP.NET Core that allows users to
 
 ## Installation
 1. Clone the repository:
-    ```bash
+```bash
     https://github.com/OsamaMousa11/Courses_Platform.git
-2.Navigate to the project directory: 
-  ```bash
+```
+2.Navigate to the project directory:
+```bash
   cd Courses_Platfrom
   ```
 3. Restore the dependencies:
@@ -43,11 +44,12 @@ CoursesPatform is a web application built with ASP.NET Core that allows users to
 dotnet restore
 ```
 4. Update the database:
-   ```bash
+```bash
    dotnet ef database update --project CoursesPlatform.Infrastructure
+```
    
 5. Run the application:
- ```bash
+```bash
  dotnet run --project CoursesPlatform.UI
  ```
 ## Usage
