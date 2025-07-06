@@ -33,11 +33,11 @@ CoursesPatform is a web application built with ASP.NET Core that allows users to
 ## Installation
 1. Clone the repository:
     ```bash
-     https://github.com/OsamaMousa11/Courses_Platform.git
+    https://github.com/OsamaMousa11/Courses_Platform.git
 2.Navigate to the project directory: 
   ```bash
-    cd Courses_Platfrom
-```
+  cd Courses_Platfrom
+  ```
 3. Restore the dependencies:
 ```bash
 dotnet restore
@@ -48,7 +48,7 @@ dotnet restore
    
 5. Run the application:
  ```bash
-dotnet run --project CoursesPlatform.UI
+ dotnet run --project CoursesPlatform.UI
  ```
 ## Usage
 * Register a new user: Go to the /Account/Register endpoint and create a new user.
