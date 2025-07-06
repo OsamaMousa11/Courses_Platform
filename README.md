@@ -33,6 +33,13 @@ CoursesPatform is a web application built with ASP.NET Core that allows users to
 ## Installation
 1. Clone the repository:
     ```bash
-     [git clone https://github.com/yourusername/MovieApp.git ](https://github.com/OsamaMousa11/Courses_Platform.git)
+     https://github.com/OsamaMousa11/Courses_Platform.git
+2.Navigate to the project directory: 
+   ```bash
+    cd Courses_Platfrom
+3.Restore the dependencies:
+  ```dotnet restore
+
+ 
   
 
