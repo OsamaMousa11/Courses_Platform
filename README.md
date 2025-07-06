@@ -44,8 +44,8 @@ dotnet restore
 ```
 4. Update the database:
    ```bash
-  dotnet ef database update --project CoursesPlatform.Infrastructure
-  
+   dotnet ef database update --project CoursesPlatform.Infrastructure
+   
 5. Run the application:
  ```bash
 dotnet run --project CoursesPlatform.UI
