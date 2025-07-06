@@ -41,9 +41,32 @@ CoursesPatform is a web application built with ASP.NET Core that allows users to
 3. Restore the dependencies:
 ```bash
 dotnet restore
+```
+4. Update the database:
+   ```bash
+  dotnet ef database update --project CoursesPlatform.Infrastructure
+  
+5. Run the application:
+ ```bash
+dotnet run --project CoursesPlatform.UI
+ ```
+## Usage
+* Register a new user: Go to the /Account/Register endpoint and create a new user.
+* Login: Go to the /Account/Login endpoint to login with your registered credentials.
+####  manage Course
+* Add a new Course : Navigate to the Course section and click on the "Add Course" button.
+* Edit a Course: Click on the "Edit" button next to a Course in the list.
+* Delete aCourse: Click on the "Delete" button next to a Course in the list.
+#### Manage Favorites
+* Create a new favorite list: Go to the favorites section and click on the "Create Favorite List" button.
+* Add Course to favorites: Open a favorite list and click on the "Add Course" button.
+* Remove Course from favorites: Click on the "Remove" button next to a Course in the favorite list. 
+
+  
 
 
-
+  
+  
 
  
   
