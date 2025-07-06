@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace CoursesPlatform.UI.Controllers
 {
     [Route("[controller]/[action]")]
+    [Authorize(Roles = "Admin")]
     public class CoursesController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -16,13 +17,13 @@ namespace CoursesPlatform.UI.Controllers
             _courseService = courseService;
 
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var courses = await _courseService.GetAllCourses();
             return View(courses);
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             ViewBag.Categories = await _categoryService.GetAllCategories();
@@ -30,6 +31,7 @@ namespace CoursesPlatform.UI.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create( CourseAddRequest courseAddRequest)
         {
             var allCourses = await _courseService.GetAllCourses();
@@ -54,6 +56,7 @@ namespace CoursesPlatform.UI.Controllers
 
             return View(course);
         }
+       
 
         public  async Task<IActionResult> Edit(Guid id)
         {
@@ -76,6 +79,7 @@ namespace CoursesPlatform.UI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(CourseUpdateRequest courseUpdateRequest)
         {   
             if(!ModelState.IsValid)
@@ -102,6 +106,7 @@ namespace CoursesPlatform.UI.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _courseService.DeleteCourse(id);

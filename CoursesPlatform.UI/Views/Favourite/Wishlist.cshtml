@@ -9,27 +9,76 @@
 
     @if (Model == null || !Model.Any())
     {
-        <div class="alert alert-info">
+        <div class="alert alert-info text-center">
             <i class="bi bi-bookmark-heart-fill me-2"></i> You don't have any courses in your wishlist yet.
         </div>
     }
     else
     {
-        <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="row row-cols-1 row-cols-md-3 g-4" id="wishlistContainer">
             @foreach (var fav in Model)
             {
-                <div class="col">
-                    <div class="card h-100 shadow-sm">
+                <div class="col" data-course-id="@fav.CourseId">
+                    <div class="card h-100 shadow-sm position-relative">
                         <img src="@fav.CourseImageUrl" class="card-img-top" alt="@fav.CourseTitle" style="height: 200px; object-fit: cover;">
+
+                        <!-- Heart button to remove from wishlist -->
+                        <button type="button"
+                                class="btn btn-link position-absolute top-0 end-0 m-2 p-0 remove-from-wishlist"
+                                title="Remove from Wishlist">
+                            <i class="bi bi-heart-fill text-danger fs-4"></i>
+                        </button>
+
                         <div class="card-body">
                             <h5 class="card-title">@fav.CourseTitle</h5>
-                            <p class="card-text text-muted">@fav.CategoryName</p>
-                            <p class="card-text small">@fav.CourseDescription?.Substring(0, Math.Min(100, fav.CourseDescription.Length))...</p>
-                            <a asp-controller="Courses" asp-action="Details" asp-route-id="@fav.CourseId" class="btn btn-sm btn-outline-primary">View Course</a>
+                            <p class="card-text text-muted mb-1">@fav.CategoryName</p>
+                            <p class="card-text small">
+                                @fav.CourseDescription?.Substring(0, Math.Min(100, fav.CourseDescription.Length))...
+                            </p>
+                            <a asp-controller="Courses" asp-action="Details" asp-route-id="@fav.CourseId"
+                               class="btn btn-sm btn-outline-primary">
+                                View Course
+                            </a>
                         </div>
                     </div>
                 </div>
             }
         </div>
+
+        <!-- Empty message hidden initially -->
+        <div class="alert alert-info text-center d-none" id="emptyMessage">
+            <i class="bi bi-bookmark-heart me-2"></i> Your wishlist is now empty.
+        </div>
     }
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.remove-from-wishlist').click(function () {
+                const btn = $(this);
+                const card = btn.closest('.col');
+                const courseId = card.data('course-id');
+
+                $.ajax({
+                    url: '/Favourite/Toggle',
+                    type: 'POST',
+                    data: { courseId: courseId },
+                    success: function () {
+                        card.fadeOut(300, function () {
+                            $(this).remove();
+
+                            // لو مفيش كورسات خلاص، اعرض رسالة "wishlist فاضية"
+                            if ($('#wishlistContainer .col').length === 0) {
+                                $('#emptyMessage').removeClass('d-none');
+                            }
+                        });
+                    },
+                    error: function () {
+                        alert('Something went wrong while removing the course.');
+                    }
+                });
+            });
+        });
+    </script>
+}

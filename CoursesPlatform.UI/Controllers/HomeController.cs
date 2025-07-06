@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace CoursesPlatform.UI.Controllers
 {
-
+    [AllowAnonymous]
     public class HomeController : Controller
     {
 
@@ -19,7 +19,7 @@ namespace CoursesPlatform.UI.Controllers
            _courseService = courseService ;
         }
         [Route("/")]
-        [AllowAnonymous]
+       
         public async Task<IActionResult> Index(string? searchString, string sortBy = nameof(Course.Rating), string sorted = "DESC")
         {
             List<CourseResponse> courses = await _courseService.GetAllCourses();

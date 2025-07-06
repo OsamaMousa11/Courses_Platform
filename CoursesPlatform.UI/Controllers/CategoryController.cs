@@ -1,8 +1,10 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
+
 namespace CoursesPlatform.UI.Controllers
 {
-    [Route("[controller]")]
-   
+    [Route("[controller]/[action]")]
+    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
 
@@ -11,7 +13,7 @@ namespace CoursesPlatform.UI.Controllers
         {
             _categoryService = categoryService;
         }
-        [Route("[action]")]
+       
         
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(CategoryResponse.Name),SortedOption sortOrder = SortedOption.Asc)
         {   
@@ -26,21 +28,21 @@ namespace CoursesPlatform.UI.Controllers
             return View(sortedCategories);
 
         }
-        [Route("[action]")]
+ 
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("[action]")]
+
         public async Task<IActionResult> Create(CategoryAddRequest request)
         {
                 await _categoryService.AddCategory(request);
                 return RedirectToAction("Index");
 
         }
-        [Route("[action]/{Id}")]
+
       
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -54,7 +56,7 @@ namespace CoursesPlatform.UI.Controllers
 
         }
         [HttpPost]
-        [Route("[action]/{Id}")]
+    
         public async Task<IActionResult> Edit(CategoryUpdateRequest request)
         {    
             CategoryResponse categoryResponse=await _categoryService.GetCategoryById(request.Id);
@@ -70,7 +72,7 @@ namespace CoursesPlatform.UI.Controllers
         }
 
         [HttpGet]
-        [Route("[action]/{Id}")]
+
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _categoryService.DeleteCategory(id);

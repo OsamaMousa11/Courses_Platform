@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace CoursesPlatform.UI.Controllers
 {
     [Route("[controller]/[action]")]
+    [Authorize]
     public class FavouriteController : Controller
     {
         private readonly IFavouriteService _favouriteService;
@@ -16,19 +18,19 @@ namespace CoursesPlatform.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Toggle(Guid courseId)
-        {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+public async Task<IActionResult> Toggle(Guid courseId)
+{
+    var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-            var userFavs = await _favouriteService.GetUserFavoriteCourseIds(userId);
+    var userFavs = await _favouriteService.GetUserFavoriteCourseIds(userId);
 
-            if (userFavs.Contains(courseId))
-                await _favouriteService.RemoveFromFavourite(userId, courseId);
-            else
-                await _favouriteService.AddToFavourite(userId, courseId);
+    if (userFavs.Contains(courseId))
+        await _favouriteService.RemoveFromFavourite(userId, courseId);
+    else
+        await _favouriteService.AddToFavourite(userId, courseId);
 
-            return RedirectToAction("Index", "Courses");
-        }
+    return RedirectToAction("Index", "Home");
+}
 
         public async Task<IActionResult> Wishlist()
         {
