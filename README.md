@@ -35,10 +35,15 @@ CoursesPatform is a web application built with ASP.NET Core that allows users to
     ```bash
      https://github.com/OsamaMousa11/Courses_Platform.git
 2.Navigate to the project directory: 
-   ```bash
+  ```bash
     cd Courses_Platfrom
-3.Restore the dependencies:
-  ```dotnet restore
+```
+3. Restore the dependencies:
+```bash
+dotnet restore
+
+
+
 
  
   
