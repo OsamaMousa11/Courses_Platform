@@ -16,6 +16,13 @@ namespace CoursePlatform.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public  async Task Delete(Course course)
+        {
+         
+             _context.Courses.Remove(course);
+            await _context.SaveChangesAsync();
+        }
+
         public async  Task<List<Course>> GetAllCourses()
         {
              return await _context.Courses
@@ -27,7 +34,6 @@ namespace CoursePlatform.Infrastructure.Repositories
         {
            return await _context.Courses
                 .Include(c => c.Category)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
@@ -37,6 +43,13 @@ namespace CoursePlatform.Infrastructure.Repositories
                 .Where(predict)
                 .Include(c => c.Category)
                 .AsNoTracking().ToListAsync();
+        }
+
+        public async  Task<Course> Update(Course course)
+        {
+            _context.Courses.Update(course); 
+            await _context.SaveChangesAsync();
+            return course;
         }
     }
 }

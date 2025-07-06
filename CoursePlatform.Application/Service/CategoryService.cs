@@ -1,7 +1,4 @@
-﻿using CoursePlatform.Core.DTO;
-using CoursePlatform.Core.Enum;
-using CoursePlatform.Core.Helper;
-using System;
+﻿
 
 namespace CoursePlatform.Core.Service
 {

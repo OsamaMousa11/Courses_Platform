@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace CoursePlatform.Core.DTO
 {
@@ -18,8 +19,24 @@ namespace CoursePlatform.Core.DTO
         public Guid? CategoryId { get; set; }
         public string? CategoryName { get; set; }
         public double? ProducedSince { get; set; }
+        public bool IsFavorited { get; set; }
+
+        public CourseUpdateRequest ToCourseUpdateRequest()
+        {
+            return new CourseUpdateRequest()
+            {
+                CourseId = CourseId,
+                Title = Title,
+                Description = Description,
+                CreatedAt = CreatedAt,
+                Rating = Rating,
+                ImageUrl = ImageUrl,
+                CategoryId = CategoryId,
+                
 
 
+            };
+         }
         public override bool Equals(object? obj)
         {
             return obj is CourseResponse response &&

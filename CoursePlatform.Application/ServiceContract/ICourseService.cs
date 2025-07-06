@@ -10,6 +10,8 @@ namespace CoursePlatform.Core.ServiceContract
         Task<CourseResponse> AddCourse(CourseAddRequest courseRequest);
 
         Task<CourseResponse> GetCourseById(Guid id);
+        Task<CourseResponse> UpdateCourse(CourseUpdateRequest courseUpdateRequest);
+        Task<bool> DeleteCourse(Guid id);
 
 
     }

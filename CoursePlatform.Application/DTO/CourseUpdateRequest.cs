@@ -16,7 +16,7 @@ namespace CoursePlatform.Core.DTO
         public string? Title { get; set; }
         [Required(ErrorMessage = "Title is " +
             "required")]
-        [StringLength(100, ErrorMessage = "Title cannot exceed 100 characters")]
+        [StringLength(1000, ErrorMessage = "Title cannot exceed 1000 characters")]
         public string? Description { get; set; }
 
         [Required(ErrorMessage = "Release Date is required")]
@@ -29,7 +29,7 @@ namespace CoursePlatform.Core.DTO
         public double? Rating { get; set; }
         public string? ImageUrl { get; set; }
 
-        [Required]
+   
         public IFormFile? Poster { get; set; }
 
         [Required(ErrorMessage = "Category is required")]
@@ -56,6 +56,7 @@ namespace CoursePlatform.Core.DTO
         {
             return new Course()
             {
+               
                 Description = Description,
                 Title = Title,
                 CreatedAt = CreatedAt,

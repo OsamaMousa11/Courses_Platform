@@ -1,0 +1,35 @@
+﻿@model List<CoursePlatform.Core.DTO.FavouriteResponse>
+
+@{
+    ViewData["Title"] = "My Wishlist";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4">My Wishlist</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-bookmark-heart-fill me-2"></i> You don't have any courses in your wishlist yet.
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var fav in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <img src="@fav.CourseImageUrl" class="card-img-top" alt="@fav.CourseTitle" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">@fav.CourseTitle</h5>
+                            <p class="card-text text-muted">@fav.CategoryName</p>
+                            <p class="card-text small">@fav.CourseDescription?.Substring(0, Math.Min(100, fav.CourseDescription.Length))...</p>
+                            <a asp-controller="Courses" asp-action="Details" asp-route-id="@fav.CourseId" class="btn btn-sm btn-outline-primary">View Course</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

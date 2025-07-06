@@ -21,8 +21,34 @@
             {
                 await file.CopyToAsync(stream);
             }
-            return newFileName;
+            return "/Upload/"+newFileName;
         }
 
+        public async  Task DeleteFile(string? ImageUrl)
+        {
+
+            if(string.IsNullOrEmpty(ImageUrl)) return;
+
+            // Remove "/Upload/" from beginning if it exists
+            string fileName = ImageUrl.Replace("/Upload/", "").TrimStart('/');
+
+            string filePath = Path.Combine(_environment.WebRootPath, "Upload", fileName);
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+        }
+
+        public async Task<string?> Updatefile(IFormFile newfile, string? CurrentFile)
+        {    
+            if (string.IsNullOrEmpty(CurrentFile))
+            {
+                return await CreateFile(newfile);
+            }
+
+            await DeleteFile(CurrentFile);
+            return  await CreateFile(newfile);
+        }
     }
 }

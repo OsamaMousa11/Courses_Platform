@@ -1,6 +1,4 @@
 ﻿
-using System.Diagnostics.Metrics;
-
 namespace CoursePlatform.Core.Service
 {
     public class CourseService : ICourseService
@@ -22,10 +20,8 @@ namespace CoursePlatform.Core.Service
             if (courseRequest.Poster == null)
                 throw new ArgumentNullException(nameof(courseRequest.Poster));
 
-           
-            string filename = await _fileServices.CreateFile(courseRequest.Poster);
-
-            courseRequest.ImageUrl = "/Upload/" +filename;
+            string imageUrl = await _fileServices.CreateFile(courseRequest.Poster);
+            courseRequest.ImageUrl = imageUrl;
 
             ValidationHelper.ModelValidation(courseRequest);
 
@@ -36,10 +32,7 @@ namespace CoursePlatform.Core.Service
                 throw new InvalidOperationException("Course with same title already exists");
 
             var course = courseRequest.ToCourse();
-
-
             course.Id = Guid.NewGuid();
-      
 
             await _courseRepository.Add(course);
 
@@ -47,6 +40,37 @@ namespace CoursePlatform.Core.Service
 
 
         }
+
+        public  async Task<CourseResponse> UpdateCourse(CourseUpdateRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            ValidationHelper.ModelValidation(request);
+
+            var course = await _courseRepository.GetById(request.CourseId);
+            if (course == null)
+                throw new KeyNotFoundException("Course not found");
+
+            
+            if (request.Poster != null)
+            {
+                string fileName = await _fileServices.Updatefile(request.Poster, course.ImageUrl);
+                request.ImageUrl = fileName;
+                course.ImageUrl = fileName;
+            }
+
+            course.Title = request.Title;
+            course.Description = request.Description;
+            course.CreatedAt = request.CreatedAt;
+            course.Rating = request.Rating;
+            course.CategoryId = request.CategoryId;
+
+            await _courseRepository.Update(course);
+
+            return course.ToCourseResponse();
+        }
+        
 
         public  async Task<List<CourseResponse>> GetAllCourses()
         {
@@ -113,6 +137,18 @@ namespace CoursePlatform.Core.Service
 
             };
             return await Task.FromResult(sortCourses);
+        }
+
+        public async Task<bool> DeleteCourse(Guid id)
+        {
+            if (id == null)
+                return false;
+            var course = await _courseRepository.GetById(id);
+            if (course == null)
+                return false;
+            await _courseRepository.Delete(course);
+            return true;
+
         }
     }
 }

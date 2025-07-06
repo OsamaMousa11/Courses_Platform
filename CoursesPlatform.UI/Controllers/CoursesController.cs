@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using System.Threading.Tasks;
+﻿using CoursePlatform.Core.Domain.Entites;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CoursesPlatform.UI.Controllers
 {
@@ -54,8 +55,65 @@ namespace CoursesPlatform.UI.Controllers
             return View(course);
         }
 
+        public  async Task<IActionResult> Edit(Guid id)
+        {
+           var courses=  await _courseService.GetCourseById(id);
+            var categories = await _categoryService.GetAllCategories();
+            Guid? selectedCategoryId = courses.CategoryId;
+            if (courses == null)
+            {
+                return RedirectToAction("Index");
+            }
+            ViewBag.Categories = categories.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = c.Name,
+                Selected = (c.Id == selectedCategoryId)
+            }).ToList();
+           CourseUpdateRequest  courseUpdateRequest = courses.ToCourseUpdateRequest();
+            return View(courseUpdateRequest);
+        }
 
-        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(CourseUpdateRequest courseUpdateRequest)
+        {   
+            if(!ModelState.IsValid)
+            {
+
+                var categories = await _categoryService.GetAllCategories();
+                ViewBag.Categories = categories.Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                }).ToList();
+
+                ViewBag.Errors = ModelState.Values
+                   .SelectMany(x => x.Errors)
+                   .Select(x => x.ErrorMessage);
+
+                return View(courseUpdateRequest);
+
+            }
+            
+
+            await _courseService.UpdateCourse(courseUpdateRequest);
+
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var result = await _courseService.DeleteCourse(id);
+            if (!result)
+                return NotFound();
+
+            TempData["Message"] = "Course deleted successfully.";
+            return RedirectToAction("Index");
+        }
+
+
+
 
     }
 }

@@ -29,7 +29,9 @@ namespace CoursePlatform.Core.DTO
         public string? ImageUrl { get; set; }
 
         [Required(ErrorMessage = "Poster is required")]
-        public IFormFile? Poster { get; set; } 
+        public IFormFile? Poster { get; set; }
+
+        [Display(Name = "Category")]
 
         [Required(ErrorMessage = "Category is required")]
         public Guid ? CategoryId { get; set; }

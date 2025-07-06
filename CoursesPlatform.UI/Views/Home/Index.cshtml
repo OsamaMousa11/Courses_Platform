@@ -1,69 +1,78 @@
 ﻿@model List<CourseResponse>
 
 @{
-    ViewData["Title"] = "All Courses";
+    ViewData["Title"] = "Browse Our Courses";
 }
 
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Our Courses</h1>
+<div class="container py-5">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="fw-bold display-6">Explore Our Courses</h1>
+            <p class="text-muted">Find the perfect course to advance your skills</p>
+        </div>
     </div>
 
-    <!-- Search and Filter Section -->
-    <div class="row mb-4 g-3 align-items-end">
-        <div class="col-md-6 position-relative">
-            <div class="input-group">
-                <span class="input-group-text bg-white">
-                    <i class="bi bi-search"></i>
-                </span>
-                <input type="text" id="searchInput" class="form-control border-start-0 ps-0"
-                       placeholder="Search courses by title..." value="@ViewBag.currentSearchString">
-            </div>
-        </div>
+    <!-- Filters -->
+    <div class="card border-0 shadow-sm mb-5">
+        <div class="card-body p-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-lg-6 position-relative">
+                    <label class="form-label fw-semibold">Search Courses</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" id="searchInput" class="form-control border-start-0 ps-0"
+                               placeholder="Search by title, description..." value="@ViewBag.currentSearchString">
+                        <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                            <i class="bi bi-x"></i>
+                        </button>
+                    </div>
+                </div>
 
-        <!-- Category Dropdown -->
-        <div class="col-md-3">
-            <label class="form-label">Category</label>
-            <select class="form-select" id="categoryFilter">
-                <option value="">All Categories</option>
-                @if (ViewBag.Categories != null)
-                {
-                    foreach (var category in ViewBag.Categories)
-                    {
-                        if (!string.IsNullOrEmpty(category))
+                <div class="col-lg-3">
+                    <label class="form-label fw-semibold">Category</label>
+                    <select class="form-select" id="categoryFilter">
+                        <option value="">All Categories</option>
+                        @if (ViewBag.Categories != null)
                         {
-                            <option value="@category">@category</option>
+                            foreach (var category in ViewBag.Categories)
+                            {
+                                if (!string.IsNullOrEmpty(category))
+                                {
+                                    <option value="@category" selected="@(ViewBag.currentCategory == category)">
+                                        @category
+                                    </option>
+                                }
+                            }
                         }
-                    }
-                }
-                else
-                {
-                    <option value="" disabled>No categories available</option>
-                }
-            </select>
-        </div>
+                    </select>
+                </div>
 
-        <!-- Sort Dropdown -->
-        <div class="col-md-3">
-            <label class="form-label">Sort By</label>
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start"
-                        type="button" id="sortDropdown" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                    @(ViewBag.currentSortBy ?? "Sort Options")
-                </button>
-                <ul class="dropdown-menu w-100" aria-labelledby="sortDropdown">
-                    <li><a class="dropdown-item" href="#" data-sort="Title" data-order="ASC"><i class="bi bi-sort-alpha-down"></i> Title (A-Z)</a></li>
-                    <li><a class="dropdown-item" href="#" data-sort="Title" data-order="DESC"><i class="bi bi-sort-alpha-down-alt"></i> Title (Z-A)</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#" data-sort="Rating" data-order="DESC"><i class="bi bi-star-fill"></i> Highest Rated</a></li>
-                    <li><a class="dropdown-item" href="#" data-sort="Rating" data-order="ASC"><i class="bi bi-star"></i> Lowest Rated</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#" data-sort="CreatedAt" data-order="DESC"><i class="bi bi-calendar-date"></i> Newest</a></li>
-                    <li><a class="dropdown-item" href="#" data-sort="CreatedAt" data-order="ASC"><i class="bi bi-calendar"></i> Oldest</a></li>
-                </ul>
-                <input type="hidden" id="sortBy" name="sortBy" value="@ViewBag.currentSortBy">
-                <input type="hidden" id="sortOrder" name="sortOrder" value="@ViewBag.currentSortOrder">
+                <div class="col-lg-3">
+                    <label class="form-label fw-semibold">Sort By</label>
+                    <div class="dropdown">
+                        <button class="btn btn-light border dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                type="button" id="sortDropdown" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            <span>
+                                @(ViewBag.currentSortBy switch
+                                {
+                                    "Title" => ViewBag.currentSortOrder == "ASC" ? "Title (A-Z)" : "Title (Z-A)",
+                                    "Rating" => ViewBag.currentSortOrder == "DESC" ? "Highest Rated" : "Lowest Rated",
+                                    "CreatedAt" => ViewBag.currentSortOrder == "DESC" ? "Newest First" : "Oldest First",
+                                    _ => "Sort Options"
+                                })
+                            </span>
+                        </button>
+                        <ul class="dropdown-menu w-100" aria-labelledby="sortDropdown">
+                            <!-- Sort Options Here (Same as سابقاً) -->
+                        </ul>
+                        <input type="hidden" id="sortBy" name="sortBy" value="@ViewBag.currentSortBy">
+                        <input type="hidden" id="sortOrder" name="sortOrder" value="@ViewBag.currentSortOrder">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -72,80 +81,70 @@
     <div class="row g-4" id="coursesContainer">
         @foreach (var course in Model)
         {
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 course-card">
-                    @if (!string.IsNullOrEmpty(course.ImageUrl))
-                    {
-                        <div class="card-img-container">
-                            <img src="@course.ImageUrl" class="card-img-top" alt="@course.Title">
-                            <div class="img-overlay"></div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="card-img-container bg-secondary d-flex align-items-center justify-content-center">
-                            <i class="bi bi-image text-white" style="font-size: 3rem;"></i>
-                            <div class="img-overlay"></div>
-                        </div>
-                    }
-
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            @if (!string.IsNullOrEmpty(course.CategoryName))
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="card h-100 course-card border-0 shadow-sm overflow-hidden">
+                    <a asp-controller="Courses" asp-action="Details" asp-route-id="@course.CourseId" class="text-decoration-none text-dark">
+                        <div class="position-relative">
+                            @if (!string.IsNullOrEmpty(course.ImageUrl))
                             {
-                                <span class="badge bg-primary">@course.CategoryName</span>
+                                <img src="@course.ImageUrl" class="card-img-top" alt="@course.Title" style="height: 180px; object-fit: cover;">
                             }
-                            @if (course.Rating.HasValue)
+                            else
                             {
-                                <div class="text-warning">
-                                    @for (int i = 1; i <= 5; i++)
-                                    {
-                                        <i class="bi @(i <= course.Rating ? "bi-star-fill" : "bi-star")"></i>
-                                    }
-                                    <span class="text-muted ms-1">@course.Rating.Value.ToString("0.0")</span>
+                                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
+                                    <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
                                 </div>
                             }
+
+                            <div class="badge-container">
+                                @if (!string.IsNullOrEmpty(course.CategoryName))
+                                {
+                                    <span class="badge bg-primary">@course.CategoryName</span>
+                                }
+                            </div>
                         </div>
-                        <h5 class="card-title">@course.Title</h5>
-                        <p class="card-text text-muted">
-                            @if (!string.IsNullOrEmpty(course.Description) && course.Description.Length > 100)
-                            {
-                                @course.Description.Substring(0, 100)
-                                <text>...</text>
-                            }
-                            else if (!string.IsNullOrEmpty(course.Description))
-                            {
-                                @course.Description
-                            }
-                        </p>
-                    </div>
-                    <div class="card-footer bg-transparent">
-                        <div class="d-flex justify-content-between align-items-center">
-                            @if (course.ProducedSince.HasValue)
-                            {
-                                <small class="text-muted">
-                                    <i class="bi bi-clock-history"></i> @course.ProducedSince.Value years
-                                </small>
-                            }
-                            <a asp-controller="Courses" asp-action="Details" asp-route-id="@course.CourseId" class="btn btn-sm btn-outline-primary">
-                                View Details
+
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-1">@course.Title</h5>
+                                @if (course.Rating.HasValue)
+                                {
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-star-fill text-warning small"></i>
+                                        <span class="ms-1 small fw-bold">@course.Rating.Value.ToString("0.0")</span>
+                                    </div>
+                                }
+                            </div>
+
+                            <p class="card-text text-muted small mb-3">
+                                @if (!string.IsNullOrEmpty(course.Description) && course.Description.Length > 100)
+                                {
+                                    @course.Description.Substring(0, 100)
+                            
+                                    <text>...</text>
+                                }
+                                else if (!string.IsNullOrEmpty(course.Description))
+                                {
+                                    @course.Description
+                                }
+                            </p>
+
+                            <!-- Favorite Button -->
+                            <form asp-controller="Favourite" asp-action="Toggle" method="post" class="favorite-form">
+                                <input type="hidden" name="courseId" value="@course.CourseId" />
+                                <button type="submit" class="btn btn-link p-0 favorite-btn" title="Add to Favorites">
+                                    <i class="bi @(course.IsFavorited ? "bi-heart-fill text-danger" : "bi-heart") fs-5"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </a>
+
+                    <div class="card-footer bg-transparent border-top-0 pt-0">
+                        <div class="d-grid">
+                            <a asp-controller="Courses" asp-action="Details" asp-route-id="@course.CourseId" class="btn btn-primary btn-sm">
+                                <i class="bi bi-eye me-1"></i> View Details
                             </a>
                         </div>
-                    </div>
-
-                    <!-- Hover Content -->
-                    <div class="hover-content">
-                        <h4>@course.Title</h4>
-                        <p class="mb-1">@course.CategoryName</p>
-                        <p class="mb-2">
-                            @if (course.Rating.HasValue)
-                            {
-                                <span>Rating: @course.Rating?.ToString("0.0")/5.0</span>
-                            }
-                        </p>
-                        <a asp-controller="Courses" asp-action="Details" asp-route-id="@course.CourseId" class="btn btn-outline-light mt-2">
-                            Explore Course
-                        </a>
                     </div>
                 </div>
             </div>
@@ -154,11 +153,77 @@
 
     @if (!Model.Any())
     {
-        <div class="alert alert-info text-center">
-            <i class="bi bi-info-circle"></i> No courses found.
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-book text-muted" style="font-size: 3rem;"></i>
+                <h4 class="mt-3">No courses found</h4>
+                <p class="text-muted mb-4">Try adjusting your search or filter criteria</p>
+                <a href="@Url.Action("Index")" class="btn btn-primary">
+                    <i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters
+                </a>
+            </div>
         </div>
     }
+
+    <!-- Pagination -->
+    @if (ViewBag.TotalPages > 1)
+    {
+        <nav aria-label="Page navigation" class="mt-5">
+            <ul class="pagination justify-content-center">
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                        <a class="page-link"
+                           href="@Url.Action("Index", new { page = i, searchString = ViewBag.currentSearchString, category = ViewBag.currentCategory, sortBy = ViewBag.currentSortBy, sortOrder = ViewBag.currentSortOrder })">
+                            @i
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
 </div>
+
+@section Styles {
+    <style>
+        .course-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+            .course-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+
+        .badge-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .course-card a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+            .course-card a:hover {
+                color: inherit;
+            }
+
+        .favorite-btn i {
+            transition: color 0.3s ease;
+        }
+
+        .favorite-btn:hover i {
+            color: red;
+        }
+    </style>
+}
 
 @section Scripts {
     <script>
@@ -167,20 +232,13 @@
                 filterCourses();
             });
 
-            $('#categoryFilter').change(function () {
+            $('#clearSearch').click(function () {
+                $('#searchInput').val('');
                 filterCourses();
             });
 
-            $('.dropdown-item[data-sort]').click(function (e) {
-                e.preventDefault();
-                const sortBy = $(this).data('sort');
-                const sortOrder = $(this).data('order');
-
-                $('#sortBy').val(sortBy);
-                $('#sortOrder').val(sortOrder);
-                $('#sortDropdown').html($(this).html());
-
-                window.location.href = `?searchString=${encodeURIComponent($('#searchInput').val())}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+            $('#categoryFilter').change(function () {
+                filterCourses();
             });
 
             function filterCourses() {
@@ -191,20 +249,12 @@
                     const card = $(this);
                     const title = card.find('.card-title').text().toLowerCase();
                     const description = card.find('.card-text').text().toLowerCase();
-                    const cardCategory = card.find('.badge').text();
+                    const cardCategory = card.find('.badge.bg-primary').text();
 
-                    const matchesSearch = searchTerm === '' ||
-                        title.includes(searchTerm) ||
-                        description.includes(searchTerm);
+                    const matchesSearch = !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
+                    const matchesCategory = !category || cardCategory === category;
 
-                    const matchesCategory = category === '' ||
-                        cardCategory === category;
-
-                    if (matchesSearch && matchesCategory) {
-                        card.closest('.col-lg-4').show();
-                    } else {
-                        card.closest('.col-lg-4').hide();
-                    }
+                    card.closest('.col-xl-3').toggle(matchesSearch && matchesCategory);
                 });
             }
         });

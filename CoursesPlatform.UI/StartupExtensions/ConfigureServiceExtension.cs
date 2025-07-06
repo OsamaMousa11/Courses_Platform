@@ -37,6 +37,10 @@ namespace CoursesPlatform.UI.StartupExtensions
             Services.AddScoped<ICourseRepository, CourseRepository>();
 
 
+            Services.AddScoped< IFavouriteService, FavouriteService>();
+            Services.AddScoped<IFavouriteRepository, FavouriteRepository>();
+          
+
             Services.AddScoped<IFileService, FileService>();
 
             Services.AddIdentity<ApplicationUser, ApplicationRole>()
