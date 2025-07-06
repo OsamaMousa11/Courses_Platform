@@ -1,7 +1,7 @@
 # CoursesPlatform
 CoursesPatform is a web application built with ASP.NET Core that allows users to manage their Courses collection and favorite lists. The application provides features for managing Courses, Category, and user-specific favorite lists, along with a responsive user interface.
 
-# Features
+## Features
 * User Authentication: Register, login, and logout functionality for users.
 * Role-Based Authorization: Different access levels for admins and regular users.
 * Course Management: Add, edit, and delete course information.
@@ -29,3 +29,8 @@ CoursesPatform is a web application built with ASP.NET Core that allows users to
 - Controllers: Handle HTTP requests and return views or data.
 - Views: Razor views for displaying data.
 - wwwroot: Static files like CSS, JS, and images.
+
+## Installation
+1. Clone the repository: 
+   [git clone](https://github.com/OsamaMousa11/Courses_Platform.git)
+
