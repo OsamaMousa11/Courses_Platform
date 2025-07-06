@@ -31,6 +31,6 @@ CoursesPatform is a web application built with ASP.NET Core that allows users to
 - wwwroot: Static files like CSS, JS, and images.
 
 ## Installation
-1. Clone the repository: 
-   [git clone](https://github.com/OsamaMousa11/Courses_Platform.git)
+1. Clone the repository: `git clone https://github.com/yourusername/MovieApp.git`
+  
 
