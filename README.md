@@ -32,6 +32,7 @@ CoursesPatform is a web application built with ASP.NET Core that allows users to
 
 ## Installation
 1. Clone the repository:
-    ```bash git clone https://github.com/yourusername/MovieApp.git
+    ```bash
+    ``` git clone https://github.com/yourusername/MovieApp.git ```
   
 
