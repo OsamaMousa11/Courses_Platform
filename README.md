@@ -13,11 +13,11 @@ CoursesPatform is a web application built with ASP.NET Core that allows users to
 # Project Structure
 * CoursePlatform.Core: Contains core domain entities, DTOs (Data Transfer Objects), enumerations, helpers, services, and service contracts.
 
--- Entities: Domain entities like Movie, Favourite, Genre, MovieFavourite.
--- DTO: Data Transfer Objects for communication between layers.
--- Services: Business logic for managing movies , Category  and favorites.
--- ServiceContracts: Interfaces for services.
--- Helper: Utility classes like ValidationModel.
+- Entities: Domain entities like Movie, Favourite, Genre, MovieFavourite.
+- DTO: Data Transfer Objects for communication between layers.
+- Services: Business logic for managing movies , Category  and favorites.
+- ServiceContracts: Interfaces for services.
+- Helper: Utility classes like ValidationModel.
 
 * CoursePlatform.Infrastructure: Contains infrastructure-related classes like application context, configuration, migrations, and repositories.
 
@@ -26,6 +26,6 @@ CoursesPatform is a web application built with ASP.NET Core that allows users to
   
 * CoursePlatform.UI: The main web application project containing controllers, views, filters, middleware, and other UI-related components.
 
--- Controllers: Handle HTTP requests and return views or data.
--- Views: Razor views for displaying data.
--- wwwroot: Static files like CSS, JS, and images.
+- Controllers: Handle HTTP requests and return views or data.
+- Views: Razor views for displaying data.
+- wwwroot: Static files like CSS, JS, and images.
