@@ -66,8 +66,7 @@ dotnet restore
 
 #### Screenshots
 * Unauthenticated View: The landing page for users who are not logged in.
- ![Uploading s1.png…]()
-   
+
 
 
  
