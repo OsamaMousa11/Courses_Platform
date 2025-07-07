@@ -46,5 +46,12 @@ namespace CoursePlatform.Core.Service
         {
             await _repository.Remove(userId, courseId);
         }
+
+        public async Task<List<FavouriteResponse>> GetAllFavourites()
+        {
+
+            var fav = await _repository.GetAll();
+            return fav.ToFavouriteResponseList();
+        }
     }
 }

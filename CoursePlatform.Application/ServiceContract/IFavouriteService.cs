@@ -13,5 +13,8 @@ namespace CoursePlatform.Core.ServiceContract
 
         Task<List<Guid>> GetUserFavoriteCourseIds(Guid userId);
         Task RemoveFromFavourite(Guid userId, Guid courseId);
+
+        Task<List<FavouriteResponse>> GetAllFavourites();
     }
+
 }

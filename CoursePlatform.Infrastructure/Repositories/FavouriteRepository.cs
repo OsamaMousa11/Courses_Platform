@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CoursePlatform.Core.DTO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,12 @@ namespace CoursePlatform.Infrastructure.Repositories
         {
             return await _context.Favorites
                 .AnyAsync(f => f.User_Id == userId && f.Course_Id == courseId);
+        }
+
+        public async Task<List<Favorite>> GetAll()
+        {
+            return await _context.Favorites.Include(f=>f.Courses)
+                .ThenInclude(c => c.Category).ToListAsync();
         }
 
         public async Task<List<Favorite>> GetUserFavourites(Guid userId)

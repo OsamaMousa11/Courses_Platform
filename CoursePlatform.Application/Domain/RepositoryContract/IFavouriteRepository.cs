@@ -12,6 +12,7 @@ namespace CoursePlatform.Core.Domain.RepositoryContract
         Task<bool> Exists(Guid userId, Guid courseId);
         Task<List<Favorite>> GetUserFavourites(Guid userId);
 
+        Task< List<Favorite> >GetAll();
         Task Remove(Guid userId, Guid courseId);
     }
 }
