@@ -1,4 +1,4 @@
-# CoursesPlatform
+![s1](https://github.com/user-attachments/assets/8dafb343-d0e4-442f-8ccd-87d4d454bbc4)# CoursesPlatform
 CoursesPatform is a web application built with ASP.NET Core that allows users to manage their Courses collection and favorite lists. The application provides features for managing Courses, Category, and user-specific favorite lists, along with a responsive user interface.
 
 ## Features
@@ -62,9 +62,16 @@ dotnet restore
 #### Manage Favorites
 * Create a new favorite list: Go to the favorites section and click on the "Create Favorite List" button.
 * Add Course to favorites: Open a favorite list and click on the "Add Course" button.
-* Remove Course from favorites: Click on the "Remove" button next to a Course in the favorite list. 
+* Remove Course from favorites: Click on the "Remove" button next to a Course in the favorite list.
 
-  
+#### Screenshots
+* Unauthenticated View: The landing page for users who are not logged in.
+ ![Uploading s1.png…]()
+   
+
+
+ 
+
 
 
   
